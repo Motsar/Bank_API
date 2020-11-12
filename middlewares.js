@@ -143,6 +143,22 @@ const processTransactions = async () => {
 
         // Send request to remote bank
         try {
+            const nock = require('nock')
+            let nockScope
+
+            if (process.env.TEST_MODE === 'true') {
+
+                const nockUrl = new URL(bankTo.transactionUrl)
+
+                console.log('Nocking '+ JSON.stringify(nockUrl));
+
+                nockScope = nock(`${nockUrl.protocol}//${nockUrl.host}`)
+                    .persist()
+                    .post(nockUrl.pathname)
+                    .reply(200, {receiverName: 'Sander Salamander'})
+
+            }
+
             // Actually send the request
             console.log("starting request")
             oServerResponse = await axios.post(bankTo.transactionUrl, { jwt }, { timeout: 2000 })
@@ -263,7 +279,35 @@ const processTransactions = async () => {
 }
 
 exports.refreshBanksFromCentralBank = async () => {
+    let nockAddress;
+    let nock;
 
+    // Mock central bank responses in TEST_MODE
+    if (process.env.TEST_MODE === 'true') {
+        console.log('TEST_MODE=true');
+        nock = require('nock')
+        nockAddress = nock(process.env.CENTRAL_BANK_URL)
+            .persist()
+            .get('/banks')
+            .reply(200,
+                [
+                    {
+                        "name": "thisBank",
+                        "transactionUrl": "http://this23bank.com/transactions/b2b",
+                        "bankPrefix": "thi",
+                        "owners": "this & that",
+                        "jwksUrl": "http://this23bank.com/transactions/jwks"
+                    },
+                    {
+                        "name": "thatBank",
+                        "transactionUrl": "https://that32Bank.com/transactions/b2b",
+                        "bankPrefix": "tha",
+                        "owners": "that & this",
+                        "jwksUrl": "https://that32Bank.com/transactions/jwks"
+                    }
+                ]
+            )
+    }
     try {
         console.log('Refreshing banks');
 
