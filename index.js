@@ -8,6 +8,7 @@ require('dotenv').config();
 
 //Import Routes
 const authRoute = require('./routes/users');
+const userInfoRoute = require('./routes/accounts');
 
 //Connect to database
 mongoose.connect(process.env.DB_CONNECT,
@@ -24,6 +25,7 @@ mongoose.connect(process.env.DB_CONNECT,
 app.use(express.json());
 //Route middlewares
 app.use('/', authRoute);
+app.use('/accounts', userInfoRoute);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(process.env.PORT, () => console.log('Server Up an running!'));

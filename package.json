@@ -22,10 +22,14 @@
   "homepage": "https://github.com/Motsar/Bank_API#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "axios": "^0.21.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jose": "^2.0.3",
+    "lodash.merge": "^4.6.2",
     "mongoose": "^5.10.13",
+    "node-fetch": "^2.6.1",
     "swagger-ui-express": "^4.1.4",
     "yamljs": "^0.3.0"
   }

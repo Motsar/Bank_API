@@ -32,3 +32,16 @@ exports.loginValidation = (data) => {
     });
     return schema.validate(data);
 };
+
+exports.accountsValidation = (data) => {
+    const schema = Joi.object({
+        name: Joi.string()
+            .min(2).
+            required(),
+        balance: Joi.number()
+            .integer()
+            .min(1)
+            .required()
+    });
+    return schema.validate(data);
+};
