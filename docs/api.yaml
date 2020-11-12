@@ -1,389 +1,618 @@
 openapi: 3.0.2
 info:
-  title: Bank
-  version: 1.0.0
-  description: Martin Mõtsar and Rene Kasetalu
+    title: Bank
+    version: 1.0.0
+    description: Martin Mõtsar and Rene Kasetalu
 paths:
-  /users:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/postUserRegisterRequest'
-        required: true
-      tags:
-        - users
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/postUserRegisterResponse'
-          description: "\t\r\nUser successfully registered."
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                'invalid name, password or email':
-                  value: |
-                    {
-                        "error":    "firstname length must be at least 2 characters long"
-                                    "lastname length must be at least 2 characters long"
-                                    "password length must be at least 6 characters long"
-                                    "email length must be at least 6 characters long"
-
-                    }
-                'missing name, password or email':
-                  value:
-                    error: 'firstname, lastname, password or email is not allowed to be empty'
-          description: Bad request
-        '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                dublicated email:
-                  value:
-                    error: Email already exists!
-          description: Unauthorized
-      summary: Registers a new user
-  /sessions:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/postSessionsRequest'
-        required: true
-      tags:
-        - sessions
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/postSessionsResponse'
-          description: User logged in successfully
-        '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                invalid email/password:
-                  value:
-                    error: Email or password is invalid!
-          description: Unauthorized
-      summary: Logs the user in
-    delete:
-      tags:
-        - sessions
-      responses:
-        '201':
-          description: User logged out successfully
-        '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                invalid token:
-                  value:
-                    error: Invalid token
-                missing authorization header:
-                  value:
-                    error: Missing Authorization header!
-          description: Unauthorized
-      security:
-        -
-          token: []
-      summary: Logs the user out
-  /accounts:
-    get:
-      tags:
-        - accounts
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getAccountResponse'
-          description: Succesful request
-        '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                invalid token:
-                  value:
-                    error: Invalid token
-                missing authorization header:
-                  value:
-                    error: Missing Authorization header
-          description: Unauthorized
-      security:
-        -
-          token: []
-      summary: Returns currently logged in user's data
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/postAccountRequest'
-        required: true
-      tags:
-        - accounts
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/postAccountResponse'
-          description: Account added successfully
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                emty name:
-                  value:
-                    error: name is not allowed to be empty
-          description: Bad Request
-        '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                invalid token:
-                  value:
-                    error: Invalid token
-                missing authorization header:
-                  value:
-                    error: Missing Authorization header!
-          description: Unauthorized
-      security:
-        -
-          token: []
-      summary: Adds a new bank account for the logged in user
-    delete:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/deleteAccountRequest'
-        required: true
-      tags:
-        - accounts
-      responses:
-        '200':
-          description: Account deleted successfully
-        '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                invalid account number:
-                  value:
-                    error: Invalid account number
-                missing authorization header:
-                  value:
-                    error: Missing Authorization header!
-                invalid token:
-                  value:
-                    error: Invalid token
-                transfer money:
-                  value:
-                    error: 'You need to transfer money from your account, before deleting it!'
-          description: Unauthorized
-      security:
-        -
-          token: []
-      summary: Deletes the logged in user's bank account
+    /users:
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postUserRegisterRequest'
+                required: true
+            tags:
+                - users
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postUserRegisterResponse'
+                    description: "\t\r\nUser successfully registered."
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                'invalid name, password or email':
+                                    value: |
+                                        {
+                                            "error":    "firstname length must be at least 2 characters long"
+                                                        "lastname length must be at least 2 characters long"
+                                                        "password length must be at least 6 characters long"
+                                                        "email length must be at least 6 characters long"
+                                            
+                                        }
+                                'missing name, password or email':
+                                    value:
+                                        error: 'firstname, lastname, password or email is not allowed to be empty'
+                    description: Bad request
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                dublicated email:
+                                    value:
+                                        error: Email already exists!
+                    description: Unauthorized
+            summary: Registers a new user
+    /sessions:
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postSessionsRequest'
+                required: true
+            tags:
+                - sessions
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postSessionsResponse'
+                    description: User logged in successfully
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid email/password:
+                                    value:
+                                        error: Email or password is invalid!
+                    description: Unauthorized
+            summary: Logs the user in
+        delete:
+            tags:
+                - sessions
+            responses:
+                '201':
+                    description: User logged out successfully
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid token:
+                                    value:
+                                        error: Invalid token
+                                missing authorization header:
+                                    value:
+                                        error: Missing Authorization header!
+                    description: Unauthorized
+            security:
+                -
+                    token: []
+            summary: Logs the user out
+    /accounts:
+        get:
+            tags:
+                - accounts
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/getAccountResponse'
+                    description: Succesful request
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid token:
+                                    value:
+                                        error: Invalid token
+                                missing authorization header:
+                                    value:
+                                        error: Missing Authorization header
+                    description: Unauthorized
+            security:
+                -
+                    token: []
+            summary: Returns currently logged in user's data
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postAccountRequest'
+                required: true
+            tags:
+                - accounts
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postAccountResponse'
+                    description: Account added successfully
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                emty name:
+                                    value:
+                                        error: name is not allowed to be empty
+                    description: Bad Request
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid token:
+                                    value:
+                                        error: Invalid token
+                                missing authorization header:
+                                    value:
+                                        error: Missing Authorization header!
+                    description: Unauthorized
+            security:
+                -
+                    token: []
+            summary: Adds a new bank account for the logged in user
+        delete:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/deleteAccountRequest'
+                required: true
+            tags:
+                - accounts
+            responses:
+                '200':
+                    description: Account deleted successfully
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid account number:
+                                    value:
+                                        error: Invalid account number
+                                missing authorization header:
+                                    value:
+                                        error: Missing Authorization header!
+                                invalid token:
+                                    value:
+                                        error: Invalid token
+                                transfer money:
+                                    value:
+                                        error: 'You need to transfer money from your account, before deleting it!'
+                    description: Unauthorized
+            security:
+                -
+                    token: []
+            summary: Deletes the logged in user's bank account
+    /transactions:
+        get:
+            tags:
+                - transactions
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/getTransactionsResponse'
+                    description: Returns an array of users`s transactions
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid token:
+                                    value:
+                                        error: invalid token
+                                missing authorization header:
+                                    value:
+                                        error: missing authorization header
+                    description: Unauthorized
+            security:
+                -
+                    token: []
+            summary: Shows transactions information
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postTransactionRequest'
+                required: true
+            tags:
+                - transactions
+            responses:
+                '200':
+                    content:
+                        application/json: {}
+                    description: Transfer accepted
+                '201':
+                    content:
+                        application/json: {}
+                    description: Transaction has been successfully queued for processing
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalidAmount:
+                                    value:
+                                        error: invalid amount
+                                invalidAccountTo:
+                                    value:
+                                        error: invalidAccountTo
+                                Parsing JWT payload fail:
+                                    value:
+                                        error: 'Parsing JWT payload failed: reason here'
+                                The Bank not found in Central Bank:
+                                    value:
+                                        error: >-
+                                            The account sending the funds does not belong to a bank registered
+                                            in Central Bank
+                                Invalid signature:
+                                    value:
+                                        error: Invalid signature
+                                Cannot verify your signature:
+                                    value:
+                                        error: >-
+                                            Cannot verify your signature: The jwksUrl of your bank
+                                            (${bankFrom.jwksUrl}) is invalid
+                    description: Invalid amount
+                '402':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                insufficientFunds:
+                                    value:
+                                        error: insufficientFunds
+                    description: Insufficent funds
+                '403':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                forbidden:
+                                    value:
+                                        error: forbidden
+                    description: The accountFrom does not belong to the user
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                accountNotFound:
+                                    value:
+                                        error: accountNotFound
+                                invalidAccountNr:
+                                    value:
+                                        error: invalid account number
+                    description: Account not found
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                Cannot verify your signature:
+                                    value:
+                                        error: 'Cannot verify your signature: The jwksUrl of your bank is missing'
+                    description: 'CCannot verify your signature: The jwksUrl of your bank is missing'
+                '502':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                Central Bank error:
+                                    value:
+                                        error: 'Central Bank error: reason here'
+                    description: Central Bank error
+            security:
+                -
+                    token: []
+            summary: Accepts new transaction
 components:
-  schemas:
-    postUserRegisterRequest:
-      title: POST /users register request
-      description: ''
-      required:
-        - firstname
-        - password
-        - lastname
-        - email
-      type: object
-      properties:
-        firstname:
-          description: Users firstname
-          type: string
-        lastname:
-          description: Users lastname
-          type: string
-        email:
-          description: Users e-mail
-          type: string
-        password:
-          format: password
-          description: Users password
-          type: string
-      example:
-        firstname: Madis
-        lastname: Maamesilane
-        email: madis.maamesilane@khk.ee
-        password: sumsummesimumm
-    postUserRegisterResponse:
-      title: POST /users register response
-      description: User successfully registered.
-      type: object
-      properties:
-        user:
-          description: User ID
-          type: string
-        account_nr:
-          description: Bank account number
-          type: string
-      example:
-        user: 5f85a6f300eafb3194a85efe
-        account_nr: MR192431597
-    error:
-      title: error Object
-      description: ''
-      type: object
-      properties:
+    schemas:
+        postUserRegisterRequest:
+            title: POST /users register request
+            description: ''
+            required:
+                - firstname
+                - password
+                - lastname
+                - email
+            type: object
+            properties:
+                firstname:
+                    description: Users firstname
+                    type: string
+                lastname:
+                    description: Users lastname
+                    type: string
+                email:
+                    description: Users e-mail
+                    type: string
+                password:
+                    format: password
+                    description: Users password
+                    type: string
+            example:
+                firstname: Madis
+                lastname: Maamesilane
+                email: madis.maamesilane@khk.ee
+                password: sumsummesimumm
+        postUserRegisterResponse:
+            title: POST /users register response
+            description: User successfully registered.
+            type: object
+            properties:
+                user:
+                    description: User ID
+                    type: string
+                account_nr:
+                    description: Bank account number
+                    type: string
+            example:
+                user: 5f85a6f300eafb3194a85efe
+                account_nr: MR192431597
         error:
-          type: string
-      example:
-        error: Error message
-    postSessionsRequest:
-      title: POST /sessions login request
-      description: ''
-      required:
-        - email
-        - password
-      type: object
-      properties:
-        email:
-          description: Users email
-          type: string
-        password:
-          description: Users password
-          type: string
-      example:
-        email: madis.maamesilane@khk.ee
-        password: sumsummesimumm
-    postSessionsResponse:
-      title: POST /sessions login response
-      description: ''
-      required:
-        - token
-      type: object
-      properties:
-        token:
-          description: A session token
-          type: string
-      example:
-        access_token: bd44825f-5863-4862-bfde-553679eab359
-    account:
-      title: account Object
-      description: ''
-      type: object
-      properties:
-        name:
-          description: ''
-          type: string
-        balance:
-          description: ''
-          type: integer
-        number:
-          description: ''
-          type: string
-    getAccountResponse:
-      title: GET /accounts response
-      description: ''
-      type: object
-      properties:
-        firstname:
-          description: ''
-          type: string
-        lastname:
-          description: ''
-          type: string
-        email:
-          description: ''
-          type: string
-        accounts:
-          description: Array of users accounts
-          type: array
-          items:
-            $ref: '#/components/schemas/account'
-      example:
-        firstname: Madis
-        lastname: Maamesilane
-        email: madis.maamesilane@khk.ee
-        accounts:
-          -
-            currency: EUR
-  name: main
-    balance: 2000
-    number: c3b873599035
-    postAccountRequest:
-      title: POST /accounts request
-      description: ''
-      required:
-        - name
-        - balance
-      type: object
-      properties:
-        name:
-          description: The name of the new bank account
-          type: string
-        balance:
-          format: int32
-          description: "\r\nthe amount in the bank account"
-          type: integer
-      example:
-        name: Salakonto
-        balance: 2000
-    postAccountResponse:
-      title: POST /accounts response
-      description: ''
-      type: object
-      properties:
-        number:
-          description: Account number
-          type: string
-        balance:
-          format: int32
-          description: The amount in the bank account
-          type: integer
-        name:
-          description: Account name
-          type: string
-      example:
-        name: Salakonto
-        balance: 2000
-        number: c3b56039819
-    deleteAccountRequest:
-      title: DELETE /accounts request
-      description: ''
-      required:
-        - number
-      type: object
-      properties:
-        number:
-          description: Account number
-          type: string
-      example:
-        number: c3b89475hjdbf
+            title: error Object
+            description: ''
+            type: object
+            properties:
+                error:
+                    type: string
+            example:
+                error: Error message
+        postSessionsRequest:
+            title: POST /sessions login request
+            description: ''
+            required:
+                - email
+                - password
+            type: object
+            properties:
+                email:
+                    description: Users email
+                    type: string
+                password:
+                    description: Users password
+                    type: string
+            example:
+                email: madis.maamesilane@khk.ee
+                password: sumsummesimumm
+        postSessionsResponse:
+            title: POST /sessions login response
+            description: ''
+            required:
+                - token
+            type: object
+            properties:
+                token:
+                    description: A session token
+                    type: string
+            example:
+                access_token: bd44825f-5863-4862-bfde-553679eab359
+        account:
+            title: account Object
+            description: ''
+            type: object
+            properties:
+                name:
+                    description: ''
+                    type: string
+                balance:
+                    description: ''
+                    type: integer
+                number:
+                    description: ''
+                    type: string
+                currency:
+                    description: ''
+                    type: string
+        getAccountResponse:
+            title: GET /accounts response
+            description: ''
+            type: object
+            properties:
+                firstname:
+                    description: ''
+                    type: string
+                lastname:
+                    description: ''
+                    type: string
+                email:
+                    description: ''
+                    type: string
+                accounts:
+                    description: Array of users accounts
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/account'
+            example:
+                firstname: Madis
+                lastname: Maamesilane
+                email: madis.maamesilane@khk.ee
+                accounts:
+                    -
+                        currency: EUR
+                        name: main
+                        balance: 2000
+                        number: c3b873599035
+        postAccountRequest:
+            title: POST /accounts request
+            description: ''
+            required:
+                - name
+                - balance
+            type: object
+            properties:
+                name:
+                    description: The name of the new bank account
+                    type: string
+                balance:
+                    description: "\r\nthe amount in the bank account"
+                    type: string
+            example:
+                name: Salakonto
+                balance: 2000
+        postAccountResponse:
+            title: POST /accounts response
+            description: ''
+            type: object
+            properties:
+                number:
+                    description: Account number
+                    type: string
+                balance:
+                    format: int32
+                    description: The amount in the bank account
+                    type: integer
+                name:
+                    description: Account name
+                    type: string
+                currency:
+                    description: Currency
+                    type: string
+            example:
+                currency: EUR
+                name: Salakonto
+                balance: 2000
+                number: c3b56039819
+        deleteAccountRequest:
+            title: DELETE /accounts request
+            description: ''
+            required:
+                - number
+            type: object
+            properties:
+                number:
+                    description: Account number
+                    type: string
+            example:
+                number: c3b89475hjdbf
+        transactionObject:
+            title: transaction Objekt
+            description: ''
+            type: object
+            properties:
+                status:
+                    description: 'One of: "pending", "inProgress", "completed", "failid"'
+                    type: string
+                id:
+                    description: Transaction id
+                    type: string
+                senderName:
+                    description: ''
+                    type: string
+                accountFrom:
+                    description: ''
+                    type: string
+                accountTo:
+                    description: ''
+                    type: string
+                amount:
+                    format: int32
+                    description: ''
+                    type: integer
+                currency:
+                    description: ''
+                    type: string
+                explanation:
+                    description: ''
+                    type: string
+                createdAt:
+                    format: date-time
+                    description: ''
+                    type: string
+                receiverName:
+                    description: ''
+                    type: string
+                statusDetail:
+                    description: ''
+                    type: string
+            example:
+                status: completed
+                id: 5fabb8cb8499ce283968d34e
+                senderName: Madis Maamesilane
+                accountFrom: c3b47219728
+                accountTo: 907642907a1266afdc8ea4ee2d7c7a6cab6
+                amount: 666
+                currency: EUR
+                explanation: Raha ülekanne
+                createdAt: '2018-02-10T09:30Z'
+                receiverName: Jaana
+                statusDetail: ''
+        getTransactionsResponse:
+            title: GET /transaction response
+            description: ''
+            type: array
+            items:
+                $ref: '#/components/schemas/transactionObject'
+        postTransactionRequest:
+            title: POST /transaction request
+            description: ''
+            required:
+                - recieverName
+                - accountFrom
+                - accountTo
+                - amount
+                - explanation
+            type: object
+            properties:
+                accountFrom:
+                    description: ''
+                    type: string
+                accountTo:
+                    description: ''
+                    type: string
+                amount:
+                    format: int32
+                    description: ''
+                    type: integer
+                explanation:
+                    description: ''
+                    type: string
+                recieverName:
+                    description: ''
+                    type: string
+            example:
+                accountFrom: c3b47219728
+                accountTo: c3b56039819
+                amount: 666
+                explanation: money
+                recieverName: Madis Maamesilane
     securitySchemes:
-      token:
-        scheme: bearer
-        type: http
-        description: security token
+        token:
+            scheme: bearer
+            type: http
+            description: security token

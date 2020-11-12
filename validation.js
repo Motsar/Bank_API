@@ -45,3 +45,25 @@ exports.accountsValidation = (data) => {
     });
     return schema.validate(data);
 };
+
+exports.transferValidation = (data) => {
+    const schema = Joi.object({
+        accountFrom: Joi.string()
+            .max(100).
+            required(),
+        recieverName: Joi.string()
+            .min(2).
+            required(),
+        accountTo: Joi.string()
+            .max(100).
+            required(),
+        amount: Joi.number()
+            .integer()
+            .min(1)
+            .required(),
+        explanation: Joi.string()
+            .min(2).
+            required()
+    });
+    return schema.validate(data);
+};
