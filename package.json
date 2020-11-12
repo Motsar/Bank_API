@@ -1,0 +1,32 @@
+{
+  "name": "pangaapi",
+  "version": "1.0.0",
+  "description": "Martin And Rene Bank",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Motsar/Bank_API.git"
+  },
+  "keywords": [
+    "Bank",
+    "API"
+  ],
+  "author": "Martin & Rene",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Motsar/Bank_API/issues"
+  },
+  "homepage": "https://github.com/Motsar/Bank_API#readme",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.13",
+    "swagger-ui-express": "^4.1.4",
+    "yamljs": "^0.3.0"
+  }
+}
