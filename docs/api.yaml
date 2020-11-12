@@ -1,106 +1,191 @@
 openapi: 3.0.2
 info:
-  title: Bank
-  version: 1.0.0
-  description: Martin Mõtsar and Rene Kasetalu
+    title: Bank
+    version: 1.0.0
+    description: Martin Mõtsar and Rene Kasetalu
 paths:
-  /users:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/postUserRegisterRequest'
-        required: true
-      tags:
-        - users
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/postUserRegisterResponse'
-          description: "\t\r\nUser successfully registered."
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                'invalid name, password or email':
-                  value: |
-                    {
-                        "error":    "firstname length must be at least 2 characters long"
-                                    "lastname length must be at least 2 characters long"
-                                    "password length must be at least 6 characters long"
-                                    "email length must be at least 6 characters long"
-
-                    }
-                'missing name, password or email':
-                  value:
-                    error: 'firstname, lastname, password or email is not allowed to be empty'
-          description: Bad request
-        '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-              examples:
-                dublicated email:
-                  value:
-                    error: Email already exists!
-          description: Unauthorized
-      summary: Registers a new user
+    /users:
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postUserRegisterRequest'
+                required: true
+            tags:
+                - users
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postUserRegisterResponse'
+                    description: "\t\r\nUser successfully registered."
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                'invalid name, password or email':
+                                    value: |
+                                        {
+                                            "error":    "firstname length must be at least 2 characters long"
+                                                        "lastname length must be at least 2 characters long"
+                                                        "password length must be at least 6 characters long"
+                                                        "email length must be at least 6 characters long"
+                                            
+                                        }
+                                'missing name, password or email':
+                                    value:
+                                        error: 'firstname, lastname, password or email is not allowed to be empty'
+                    description: Bad request
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                dublicated email:
+                                    value:
+                                        error: Email already exists!
+                    description: Unauthorized
+            summary: Registers a new user
+    /sessions:
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postSessionsRequest'
+                required: true
+            tags:
+                - sessions
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postSessionsResponse'
+                    description: User logged in successfully
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid email/password:
+                                    value:
+                                        error: Email or password is invalid!
+                    description: Unauthorized
+            summary: Logs the user in
+        delete:
+            tags:
+                - sessions
+            responses:
+                '201':
+                    description: User logged out successfully
+                '401':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                invalid token:
+                                    value:
+                                        error: Invalid token
+                                missing authorization header:
+                                    value:
+                                        error: Missing Authorization header!
+                    description: Unauthorized
+            security:
+                -
+                    token: []
+            summary: Logs the user out
 components:
-  schemas:
-    postUserRegisterRequest:
-      title: POST /users register request
-      description: ''
-      required:
-        - firstname
-        - password
-        - lastname
-        - email
-      type: object
-      properties:
-        firstname:
-          description: Users firstname
-          type: string
-        lastname:
-          description: Users lastname
-          type: string
-        email:
-          description: Users e-mail
-          type: string
-        password:
-          format: password
-          description: Users password
-          type: string
-      example:
-        firstname: Madis
-        lastname: Maamesilane
-        email: madis.maamesilane@khk.ee
-        password: sumsummesimumm
-    postUserRegisterResponse:
-      title: POST /users register response
-      description: User successfully registered.
-      type: object
-      properties:
-        user:
-          description: User ID
-          type: string
-        account_nr:
-          description: Bank account number
-          type: string
-      example:
-        user: 5f85a6f300eafb3194a85efe
-        account_nr: MR192431597
-    error:
-      title: error Object
-      description: ''
-      type: object
-      properties:
+    schemas:
+        postUserRegisterRequest:
+            title: POST /users register request
+            description: ''
+            required:
+                - firstname
+                - password
+                - lastname
+                - email
+            type: object
+            properties:
+                firstname:
+                    description: Users firstname
+                    type: string
+                lastname:
+                    description: Users lastname
+                    type: string
+                email:
+                    description: Users e-mail
+                    type: string
+                password:
+                    format: password
+                    description: Users password
+                    type: string
+            example:
+                firstname: Madis
+                lastname: Maamesilane
+                email: madis.maamesilane@khk.ee
+                password: sumsummesimumm
+        postUserRegisterResponse:
+            title: POST /users register response
+            description: User successfully registered.
+            type: object
+            properties:
+                user:
+                    description: User ID
+                    type: string
+                account_nr:
+                    description: Bank account number
+                    type: string
+            example:
+                user: 5f85a6f300eafb3194a85efe
+                account_nr: MR192431597
         error:
-          type: string
-      example:
-        error: Error message
+            title: error Object
+            description: ''
+            type: object
+            properties:
+                error:
+                    type: string
+            example:
+                error: Error message
+        postSessionsRequest:
+            title: POST /sessions login request
+            description: ''
+            required:
+                - email
+                - password
+            type: object
+            properties:
+                email:
+                    description: Users email
+                    type: string
+                password:
+                    description: Users password
+                    type: string
+            example:
+                email: madis.maamesilane@khk.ee
+                password: sumsummesimumm
+        postSessionsResponse:
+            title: POST /sessions login response
+            description: ''
+            required:
+                - token
+            type: object
+            properties:
+                token:
+                    description: A session token
+                    type: string
+            example:
+                access_token: bd44825f-5863-4862-bfde-553679eab359
+    securitySchemes:
+        token:
+            scheme: bearer
+            type: http
+            description: security token
